@@ -1,0 +1,2 @@
+# soundMgrWidget
+Sound manager widget
