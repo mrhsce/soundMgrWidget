@@ -3,6 +3,7 @@ package com.androtec.mrhs.frontspeakertest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,6 +13,7 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,20 +23,21 @@ import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
-    Switch frontSpeakerSwitch;
-    private AudioManager audioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        frontSpeakerSwitch = (Switch) findViewById(R.id.frontSpeakerSwitch);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        updateSwitchState();
-
-        Intent i = new Intent(this , MyService.class);
-        startService(i);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String state = preferences.getString(MyWidgetProvider.SAVE_NAME_STATE, "");
+        if (state.equals(""))
+        {
+            SharedPreferences.Editor editor = preferences.edit();
+            Utilities.setEarpieceMode(this,false);
+            editor.putString(MyWidgetProvider.SAVE_NAME_STATE, MyWidgetProvider.Action_NOT_ACTIVE);
+            editor.commit();
+        }
 
 
         //audioManager.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
@@ -48,30 +51,8 @@ public class MainActivity extends Activity {
         Log.d("ROUTE_EARPIECE" ,Integer.toString(AudioManager.ROUTE_EARPIECE));
         Log.d("ROUTE_ALL", Integer.toString(AudioManager.ROUTE_ALL ));
 
-        frontSpeakerSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (audioManager.getMode() == 0)
-                {
-                    Utilities.setEarpieceMode(MainActivity.this ,true);
-                }
-                else
-                {
-                    Utilities.setEarpieceMode(MainActivity.this ,false);
-                }
-            }
-        });
     }
 
-    void updateSwitchState()
-    {
-        if(audioManager.getMode() == AudioManager.MODE_IN_CALL || audioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION){
-            frontSpeakerSwitch.setChecked(true);
-        }
-        else {
-            frontSpeakerSwitch.setChecked(false);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

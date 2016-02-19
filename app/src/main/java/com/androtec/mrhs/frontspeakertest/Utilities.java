@@ -36,14 +36,12 @@ public class Utilities {
             field = PowerManager.class.getClass().getField("PROXIMITY_SCREEN_OFF_WAKE_LOCK").getInt(null);
         } catch (Throwable ignored) {
         }
-
         wakeLock = powerManager.newWakeLock(field, "bagi");
 
         if(!wakeLock.isHeld()) {
             wakeLock.acquire();
         }
     }
-
 
     public static void setEarpieceMode(Context ctx , Boolean flag)
     {
@@ -69,7 +67,6 @@ public class Utilities {
         {
             audioManager.setMode(0);
             audioManager.setRouting(AudioManager.MODE_NORMAL, 2, -1);
-
         }
     }
 

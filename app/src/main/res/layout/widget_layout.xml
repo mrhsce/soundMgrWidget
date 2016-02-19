@@ -1,52 +1,29 @@
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_margin="8dip"
-    android:id="@+id/layout"
     android:background="@drawable/bgww"
-    android:layout_height="match_parent" >
-    
-        <TextView
-            android:id="@+id/update"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/imageView1"
-            android:textColor="@android:color/background_dark"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center"
-            android:layout_margin="0dip"
-            android:gravity="center_horizontal|top"
-            android:paddingTop="6dp"
-            android:text="Loading..." >
+    android:orientation="horizontal">
 
-    </TextView>
+    <ImageView
+        android:id="@+id/active"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:src="@drawable/active_off"/>
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/sms" />
+    <ImageView
+        android:id="@+id/notActive"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:src="@drawable/not_active_off"/>
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="10dp"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/share" />
+    <ImageView
+        android:id="@+id/semiState"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:src="@drawable/semi_off"/>
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_home" />
-
-</RelativeLayout>
+</LinearLayout>
