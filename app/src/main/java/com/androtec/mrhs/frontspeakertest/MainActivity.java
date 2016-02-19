@@ -1,6 +1,7 @@
 package com.androtec.mrhs.frontspeakertest;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -19,34 +20,26 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity implements SensorEventListener {
-
-    AudioManager audioManager;
+public class MainActivity extends Activity {
     Switch frontSpeakerSwitch;
-
-
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
-
-    private PackageManager pm ;
+    private AudioManager audioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        pm = this.getPackageManager();
-        audioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
         frontSpeakerSwitch = (Switch) findViewById(R.id.frontSpeakerSwitch);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         updateSwitchState();
 
+        Intent i = new Intent(this , MyService.class);
+        startService(i);
 
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         //audioManager.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
 
-        Log.d("in call" ,Integer.toString(AudioManager.MODE_IN_CALL ));
+        Log.d("in call", Integer.toString(AudioManager.MODE_IN_CALL));
         Log.d("MODE_IN_COMMUNICATION" ,Integer.toString(AudioManager.MODE_IN_COMMUNICATION ));
         Log.d("MODE_NORMAL" ,Integer.toString(AudioManager.MODE_NORMAL ));
         Log.d("MODE_INVALID" ,Integer.toString(AudioManager.MODE_INVALID ));
@@ -60,46 +53,14 @@ public class MainActivity extends Activity implements SensorEventListener {
             public void onClick(View view) {
                 if (audioManager.getMode() == 0)
                 {
-                    setEarpiece(true);
+                    Utilities.setEarpieceMode(MainActivity.this ,true);
                 }
                 else
                 {
-                    setEarpiece(false);
+                    Utilities.setEarpieceMode(MainActivity.this ,false);
                 }
             }
         });
-    }
-
-
-    public boolean haveTelephony()
-    {
-        return pm.hasSystemFeature("android.hardware.telephony");
-    }
-
-    public void setEarpiece(boolean flag)
-    {
-        byte byte0 = 0 ;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
-            byte0 = AudioManager.MODE_IN_COMMUNICATION;
-        } else{
-            byte0 = AudioManager.MODE_IN_CALL;
-        }
-        if (!haveTelephony()) {
-            return;
-        }
-        audioManager.setSpeakerphoneOn(false);
-        if (flag)
-        {
-            audioManager.setMode(byte0);
-            audioManager.setSpeakerphoneOn(false);
-        } else
-        {
-            audioManager.setMode(0);
-            audioManager.setRouting(AudioManager.MODE_NORMAL, 2, -1);
-
-        }
-        updateSwitchState();
-
     }
 
     void updateSwitchState()
@@ -111,32 +72,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             frontSpeakerSwitch.setChecked(false);
         }
     }
-
-
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, mSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    protected void onPause() {
-        super.onPause();
-        mSensorManager.unregisterListener(this);
-    }
-
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-        Toast.makeText(this, "sensor changed", Toast.LENGTH_LONG);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

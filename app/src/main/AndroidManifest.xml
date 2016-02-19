@@ -10,6 +10,8 @@
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application>
         android:icon="@mipmap/ic_launcher"
@@ -35,6 +37,20 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
+        </receiver>
+
+        <service
+            android:name="com.androtec.mrhs.frontspeakertest.MyService"
+            android:enabled="true"
+            android:exported="true"  />
+
+        <receiver
+            android:enabled="true"
+            android:name="com.androtec.mrhs.frontspeakertest.BootUpReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </receiver>
 
 
